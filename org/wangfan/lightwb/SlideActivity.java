@@ -19,34 +19,34 @@ import android.widget.OverScroller;
 
 /**
  * 
- * ´ËÀàÊµÏÖ¿ÉÒÔ»¬¶¯µÄActivity¡£
+ * æ­¤ç±»å®ç°å¯ä»¥æ»‘åŠ¨çš„Activityã€‚
  * <p>
- * Ê¹ÓÃ·½·¨£º </br>
+ * ä½¿ç”¨æ–¹æ³•ï¼š </br>
  * <ul>
- * 1.ÈÃĞèÒª»¬¶¯¹Ø±ÕµÄActivity¼Ì³ĞSlideActivity¡£</br>
- * 2.ÔÚAndroidManifest.xmlÖĞÎªActivityÉèÖÃ¡°´°¿ÚÍ¸Ã÷¡±µÄÖ÷Ìâ£¨&lt;item
- * name=¡°android:windowIsTranslucent¡±&gt;true&lt;/item&gt;£©¡£</br> 3.Ê¹ÓÃ
- * {@link #setLeftShadow(Drawable)}ÉèÖÃÒõÓ°¡£
+ * 1.è®©éœ€è¦æ»‘åŠ¨å…³é—­çš„Activityç»§æ‰¿SlideActivityã€‚</br>
+ * 2.åœ¨AndroidManifest.xmlä¸­ä¸ºActivityè®¾ç½®â€œçª—å£é€æ˜â€çš„ä¸»é¢˜ï¼ˆ&lt;item
+ * name=â€œandroid:windowIsTranslucentâ€&gt;true&lt;/item&gt;ï¼‰ã€‚</br> 3.ä½¿ç”¨
+ * {@link #setLeftShadow(Drawable)}è®¾ç½®é˜´å½±ã€‚
  * </ul>
  * </p>
  * <p>
- * ÁíÍâ£¬¸²¸Ç{@link #drawShadow(Canvas, View, Drawable)}·½·¨ÊµÏÖ×Ô¶¨ÒåÒõÓ°»æÖÆ¡£¸²¸Ç
- * {@link #computeSpringbackBoundary(int)}·½·¨×Ô¶¨Òå»Øµ¯½çÏß
+ * å¦å¤–ï¼Œè¦†ç›–{@link #drawShadow(Canvas, View, Drawable)}æ–¹æ³•å®ç°è‡ªå®šä¹‰é˜´å½±ç»˜åˆ¶ã€‚è¦†ç›–
+ * {@link #computeSpringbackBoundary(int)}æ–¹æ³•è‡ªå®šä¹‰å›å¼¹ç•Œçº¿
  * </p>
  * 
  * @author wangfan </br>wangfansh@foxmail.com
  * 
  */
 public class SlideActivity extends Activity {
-    /** Èç¹ûFlingËÙ¶È´óÓÚ´ËËÙ¶È£¬Ôò¹Ø±ÕActivity */
+    /** å¦‚æœFlingé€Ÿåº¦å¤§äºæ­¤é€Ÿåº¦ï¼Œåˆ™å…³é—­Activity */
     public static final int MIN_CLOSE_VELOCITY = 1000;
-    /** fling´¥·¢¹Ø±ÕÊ±µÄËÙ¶È */
+    /** flingè§¦å‘å…³é—­æ—¶çš„é€Ÿåº¦ */
     public static final int FLING_CLOSE_VELOCITY = 800;
-    /** »¬¶¯»Øµ¯Ê±µÄËÙ¶È */
+    /** æ»‘åŠ¨å›å¼¹æ—¶çš„é€Ÿåº¦ */
     public static final int SPRINGBACK_VELOCITY = 700;
-    /** »¬¶¯Ê±µÄµ×²ã±³¾°RGBÑÕÉ« */
+    /** æ»‘åŠ¨æ—¶çš„åº•å±‚èƒŒæ™¯RGBé¢œè‰² */
     public static final int DEFAULT_BACKGROUND_RGB = 0xFF000000;
-    /** »¬¶¯Ê±Í¸Ã÷¶È½¥±äµÄÆğÊ¼AlphaÖµ */
+    /** æ»‘åŠ¨æ—¶é€æ˜åº¦æ¸å˜çš„èµ·å§‹Alphaå€¼ */
     public static final int DEFAULT_ALPHA = 160;
     private ViewGroup mDecorView;
     private Window mWindow;
@@ -55,7 +55,7 @@ public class SlideActivity extends Activity {
     private boolean mIsFirstScroll = true;
     private SlideLayout mSlideLayout;
     private Drawable mLeftShadow;
-    // »¬¶¯½Ç¶ÈÅĞ¶Ï
+    // æ»‘åŠ¨è§’åº¦åˆ¤æ–­
     private MoveDetector mMoveDetector;
     @SuppressWarnings("unused")
     private boolean mAllowSlide = true;
@@ -67,33 +67,33 @@ public class SlideActivity extends Activity {
     }
 
     /**
-     * »ñÈ¡µ±Ç°×óÍâÒõÓ°¡£
+     * è·å–å½“å‰å·¦å¤–é˜´å½±ã€‚
      * 
-     * @return µ±Ç°×óÍâÒõÓ°
+     * @return å½“å‰å·¦å¤–é˜´å½±
      */
     public Drawable getLeftShadow() {
         return mLeftShadow;
     }
 
     /**
-     * ÉèÖÃĞèÒªÏÔÊ¾µÄ×óÍâÒõÓ°¡£Ä¬ÈÏÎŞÒõÓ°ÏÔÊ¾¡£
+     * è®¾ç½®éœ€è¦æ˜¾ç¤ºçš„å·¦å¤–é˜´å½±ã€‚é»˜è®¤æ— é˜´å½±æ˜¾ç¤ºã€‚
      * 
      * @param mLeftShadow
-     *            ÒõÓ°Drawable
+     *            é˜´å½±Drawable
      */
     public void setLeftShadow(Drawable mLeftShadow) {
         this.mLeftShadow = mLeftShadow;
     }
 
-    // ÄÚÖÃ»¬¶¯²¼¾ÖÀà£¬²åÈëµ½DecorViewºÍÆäÄÚÈİµ±ÖĞ¡£ÏìÓ¦»¬¶¯ÊÖÊÆ£¬Ö´ĞĞ»¬¶¯£¬»æÖÆÒõÓ°¡£
+    // å†…ç½®æ»‘åŠ¨å¸ƒå±€ç±»ï¼Œæ’å…¥åˆ°DecorViewå’Œå…¶å†…å®¹å½“ä¸­ã€‚å“åº”æ»‘åŠ¨æ‰‹åŠ¿ï¼Œæ‰§è¡Œæ»‘åŠ¨ï¼Œç»˜åˆ¶é˜´å½±ã€‚
     class SlideLayout extends FrameLayout {
         public SlideLayout(Context context) {
             super(context);
             init();
         }
 
-        // ³õÊ¼»¯¡£
-        // Ìæ»»ÔÚDecorViewºÍÄÚÈİµ±ÖĞ²åÈë×Ô¶¨ÒåLayout£¬ÓÃÀ´ÊµÏÖÍâ±ß¿òÒõÓ°¡£
+        // åˆå§‹åŒ–ã€‚
+        // æ›¿æ¢åœ¨DecorViewå’Œå†…å®¹å½“ä¸­æ’å…¥è‡ªå®šä¹‰Layoutï¼Œç”¨æ¥å®ç°å¤–è¾¹æ¡†é˜´å½±ã€‚
         private void init() {
             View DecorLayout = mDecorView.getChildAt(0);
             mDecorView.removeView(DecorLayout);
@@ -108,7 +108,7 @@ public class SlideActivity extends Activity {
             return superReturn;
         }
 
-        // À¹½ØºáÏò»¬¶¯¡£
+        // æ‹¦æˆªæ¨ªå‘æ»‘åŠ¨ã€‚
         @Override
         public boolean onInterceptTouchEvent(MotionEvent ev) {
             int moveStatus = mMoveDetector.getMoveStatus(ev);
@@ -146,17 +146,17 @@ public class SlideActivity extends Activity {
     }
 
     /**
-     * »¬¶¯Ê±¼ÆËã±³¾°argbÑÕÉ«¡£¸²¸Ç´Ë·½·¨ÊµÏÖ×Ô¶¨Òå¼ÆËã¡£
+     * æ»‘åŠ¨æ—¶è®¡ç®—èƒŒæ™¯argbé¢œè‰²ã€‚è¦†ç›–æ­¤æ–¹æ³•å®ç°è‡ªå®šä¹‰è®¡ç®—ã€‚
      * 
      * @param scrollX
-     *            µ±Ç°Ë®Æ½»¬¶¯Öµ¡£
+     *            å½“å‰æ°´å¹³æ»‘åŠ¨å€¼ã€‚
      * @param totalWidth
-     *            ¿ÉÒÔ»¬¶¯µÄ×Ü¿í¶È¡£
+     *            å¯ä»¥æ»‘åŠ¨çš„æ€»å®½åº¦ã€‚
      * @param maxAlpha
-     *            alpha×î´óÖµ¡£·¶Î§0¡«255£¬Ä¬ÈÏÖµ160¡£
+     *            alphaæœ€å¤§å€¼ã€‚èŒƒå›´0ï½255ï¼Œé»˜è®¤å€¼160ã€‚
      * @param baseBgRgb
-     *            ±³¾°ÑÕÉ«,²»Í¸Ã÷¡£Ä¬ÈÏÖµ0xFF000000;
-     * @return ·µ»ØºÏ³ÉµÄargbÖµ¡£
+     *            èƒŒæ™¯é¢œè‰²,ä¸é€æ˜ã€‚é»˜è®¤å€¼0xFF000000;
+     * @return è¿”å›åˆæˆçš„argbå€¼ã€‚
      */
     protected int computeBackgroundArgb(int scrollX, int totalWidth,
             int maxAlpha, int baseBgRgb) {
@@ -166,24 +166,24 @@ public class SlideActivity extends Activity {
     }
 
     /**
-     * ¼ÆËã»Øµ¯½çÏß¡£¸²¸Ç´Ë·½·¨ÒÔÊµÏÖ×Ô¼ºµÄ»Øµ¯½çÏŞ¼ÆËã·½·¨¡£ Ä¬ÈÏµÄÊµÏÖÊÇDecorViewµÄÒ»°ë¡£
+     * è®¡ç®—å›å¼¹ç•Œçº¿ã€‚è¦†ç›–æ­¤æ–¹æ³•ä»¥å®ç°è‡ªå·±çš„å›å¼¹ç•Œé™è®¡ç®—æ–¹æ³•ã€‚ é»˜è®¤çš„å®ç°æ˜¯DecorViewçš„ä¸€åŠã€‚
      * 
      * @param DecorViewWidth
-     *            DecorView¿í¶È
-     * @return »Øµ¯½çÏß
+     *            DecorViewå®½åº¦
+     * @return å›å¼¹ç•Œçº¿
      */
     protected int computeSpringbackBoundary(int DecorViewWidth) {
         return DecorViewWidth / 2;
     }
 
     /**
-     * »æÖÆÒõÓ°¡£¸²¸Ç´Ë·½·¨£¬¿ÉÊµÏÖ×Ô¼ºµÄ»æÖÆ¡£
+     * ç»˜åˆ¶é˜´å½±ã€‚è¦†ç›–æ­¤æ–¹æ³•ï¼Œå¯å®ç°è‡ªå·±çš„ç»˜åˆ¶ã€‚
      * 
      * @param canvas
      * @param child
-     *            ActivityµÄÄÚÈİ²¼¾Ö¡£
+     *            Activityçš„å†…å®¹å¸ƒå±€ã€‚
      * @param leftShadow
-     *            ¶¨ÒåµÄÒõÓ°Í¼Æ¬¡£²Î¼û£º{@link setLeftShadow}
+     *            å®šä¹‰çš„é˜´å½±å›¾ç‰‡ã€‚å‚è§ï¼š{@link setLeftShadow}
      */
     protected void drawShadow(Canvas canvas, View child, Drawable leftShadow) {
         if (leftShadow != null) {
@@ -193,13 +193,13 @@ public class SlideActivity extends Activity {
         }
     }
 
-    // Activity³õÊ¼»¯
+    // Activityåˆå§‹åŒ–
     private void init() {
         mWindow = this.getWindow();
         mDecorView = (ViewGroup) this.getWindow().getDecorView();
         mDecorView.setBackgroundColor(Color.TRANSPARENT);
         WindowManager.LayoutParams wlp = mWindow.getAttributes();
-        wlp.format = PixelFormat.TRANSLUCENT;// windowµÄ±³¾°Ò²±ØĞëÍ¸Ã÷
+        wlp.format = PixelFormat.TRANSLUCENT;// windowçš„èƒŒæ™¯ä¹Ÿå¿…é¡»é€æ˜
         mWindow.setAttributes(wlp);
         mGD = new GestureDetector(this, new MyGestureListener());
         mScroller = new OverScroller(this);
@@ -207,7 +207,7 @@ public class SlideActivity extends Activity {
         mMoveDetector = new MoveDetector(this);
     }
 
-    // ¼ÆËã¹ö¶¯£¬Ö´ĞĞ¹ö¶¯¡£
+    // è®¡ç®—æ»šåŠ¨ï¼Œæ‰§è¡Œæ»šåŠ¨ã€‚
     Runnable ViewScroller = new Runnable() {
         @Override
         public void run() {
@@ -221,22 +221,22 @@ public class SlideActivity extends Activity {
     };
 
     /**
-     * ÎŞ¶¯»­¹Ø±ÕActivity
+     * æ— åŠ¨ç”»å…³é—­Activity
      */
     public void finishActivity() {
         this.finish();
         this.overridePendingTransition(0, 0);
     }
 
-    // »¬¶¯·½ÏòÅĞ¶ÏÀà
+    // æ»‘åŠ¨æ–¹å‘åˆ¤æ–­ç±»
     class MoveDetector {
-        // Î´Ê¶±ğ·½Ïò
+        // æœªè¯†åˆ«æ–¹å‘
         public static final int UNKNOWN = 0;
-        // ºáÏò
+        // æ¨ªå‘
         public static final int HOR = 1;
-        // ×İÏò
+        // çºµå‘
         public static final int VER = 2;
-        // Ä¬ÈÏ×î´ó½Ç¶È¡£Èç¹ûĞ¡ÓÚÕâ¸ö½Ç¶È£¬ÔòÅĞ¶ÏÎªºáÏò»¬¶¯¡£·ñÔò£¬ÔòÎª×İÏò»¬¶¯¡£
+        // é»˜è®¤æœ€å¤§è§’åº¦ã€‚å¦‚æœå°äºè¿™ä¸ªè§’åº¦ï¼Œåˆ™åˆ¤æ–­ä¸ºæ¨ªå‘æ»‘åŠ¨ã€‚å¦åˆ™ï¼Œåˆ™ä¸ºçºµå‘æ»‘åŠ¨ã€‚
         public static final int DEFAULT_MAX_ANGLE = 30;
         private float downX;
         private float downY;
@@ -264,7 +264,7 @@ public class SlideActivity extends Activity {
             this.maxInterceptAngle = maxInterceptAngle;
         }
 
-        // ¸ù¾İTouchEventÅĞ¶Ï»¬¶¯·½Ïò
+        // æ ¹æ®TouchEventåˆ¤æ–­æ»‘åŠ¨æ–¹å‘
         public int getMoveStatus(MotionEvent ev) {
             switch (ev.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -290,14 +290,14 @@ public class SlideActivity extends Activity {
         }
     }
 
-    // ÊÖÊÆÊ¶±ğÀà
+    // æ‰‹åŠ¿è¯†åˆ«ç±»
     class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2,
                 float distanceX, float distanceY) {
             if (mSlideLayout.getScrollX() >= 0 && distanceX > 0)
                 return false;
-            // ±ÜÃâÂıËÙ»¬¶¯Ê±£¬¿¨¶ÙµÄÎÊÌâ¡£Ìø¹ıtouchSlopµÄÒÆ¶¯¾àÀë¡£
+            // é¿å…æ…¢é€Ÿæ»‘åŠ¨æ—¶ï¼Œå¡é¡¿çš„é—®é¢˜ã€‚è·³è¿‡touchSlopçš„ç§»åŠ¨è·ç¦»ã€‚
             if (mIsFirstScroll && -distanceX > 1) {
                 distanceX = 0;
                 mIsFirstScroll = false;
