@@ -44,8 +44,10 @@ public class SlideActivity extends Activity {
     public static final int FLING_CLOSE_VELOCITY = 800;
     /** 滑动回弹时的速度 */
     public static final int SPRINGBACK_VELOCITY = 700;
-    /** 滑动时的底层背景颜色 */
-    public static final String DECOR_BACKGROUND_COLOR = "#20000000";
+    /** 滑动时的底层背景RGB颜色 */
+    public static final int DEFAULT_BACKGROUND_RGB = 0xFF000000;
+    /** 滑动时透明度渐变的起始Alpha值 */
+    public static final int DEFAULT_ALPHA = 160;
     private ViewGroup mDecorView;
     private Window mWindow;
     private GestureDetector mGD;
@@ -97,7 +99,6 @@ public class SlideActivity extends Activity {
             mDecorView.removeView(DecorLayout);
             this.addView(DecorLayout);
             mDecorView.addView(this);
-            this.setBackgroundColor(Color.parseColor(DECOR_BACKGROUND_COLOR));
         }
 
         @Override
@@ -135,6 +136,33 @@ public class SlideActivity extends Activity {
             mGD.onTouchEvent(ev);
             return true;
         }
+
+        @Override
+        protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+            int color = computeBackgroundArgb(l, mDecorView.getWidth(),
+                    DEFAULT_ALPHA, DEFAULT_BACKGROUND_RGB);
+            this.setBackgroundColor(color);
+        }
+    }
+
+    /**
+     * 滑动时计算背景argb颜色。覆盖此方法实现自定义计算。
+     * 
+     * @param scrollX
+     *            当前水平滑动值。
+     * @param totalWidth
+     *            可以滑动的总宽度。
+     * @param maxAlpha
+     *            alpha最大值。范围0～255，默认值160。
+     * @param baseBgRgb
+     *            背景颜色,不透明。默认值0xFF000000;
+     * @return 返回合成的argb值。
+     */
+    protected int computeBackgroundArgb(int scrollX, int totalWidth,
+            int maxAlpha, int baseBgRgb) {
+        float percent = Math.abs(scrollX) / (float) totalWidth;
+        int alpha = (int) ((1 - percent) * maxAlpha);
+        return (alpha << 24) | (baseBgRgb & 0x00FFFFFF);
     }
 
     /**
