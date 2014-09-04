@@ -85,6 +85,17 @@ public class SlideActivity extends Activity {
         this.mLeftShadow = mLeftShadow;
     }
 
+    /**
+     * 设置需要显示的左外阴影。默认无阴影显示。
+     * 
+     * @param drawableRes
+     *            阴影资源
+     */
+    public void setLeftShadow(int drawableRes) {
+        Drawable leftShadow = this.getResources().getDrawable(drawableRes);
+        setLeftShadow(leftShadow);
+    }
+
     // 内置滑动布局类，插入到DecorView和其内容当中。响应滑动手势，执行滑动，绘制阴影。
     class SlideLayout extends FrameLayout {
         public SlideLayout(Context context) {
